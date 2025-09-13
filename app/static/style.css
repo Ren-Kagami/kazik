@@ -1,0 +1,781 @@
+/* Enhanced Slot Machine Game Styles with Animations */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 1s ease;
+}
+
+header h1 {
+    font-size: 3.5em;
+    margin-bottom: 15px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+header p {
+    font-size: 1.3em;
+    opacity: 0.9;
+    color: #e8e8e8;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    from { text-shadow: 3px 3px 6px rgba(0,0,0,0.4), 0 0 10px rgba(255, 215, 0, 0.3); }
+    to { text-shadow: 3px 3px 6px rgba(0,0,0,0.4), 0 0 20px rgba(255, 215, 0, 0.6); }
+}
+
+.game-area {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeInUp 1s ease 0.3s both;
+}
+
+.slot-machine {
+    background: rgba(255,255,255,0.12);
+    border-radius: 25px;
+    padding: 40px;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255,255,255,0.25);
+    min-width: 400px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.slot-machine:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+}
+
+.reels {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    perspective: 1000px;
+}
+
+.reel {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    border: 4px solid #ffd700;
+    box-shadow:
+        0 8px 16px rgba(0,0,0,0.3),
+        inset 0 2px 4px rgba(255,255,255,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.reel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    transition: left 0.5s ease;
+}
+
+.reel:hover::before {
+    left: 100%;
+}
+
+.reel.spinning {
+    animation: reelSpin 0.15s infinite, reelGlow 0.15s infinite;
+    border-color: #ff6b6b;
+    transform: rotateY(10deg);
+}
+
+.reel.stopped {
+    animation: reelBounce 0.6s ease, reelFlash 0.3s ease;
+    border-color: #2ecc71;
+}
+
+.reel.winning {
+    animation: reelWin 1s infinite, reelPulse 0.8s infinite;
+    border-color: #ffd700;
+    box-shadow:
+        0 8px 16px rgba(0,0,0,0.3),
+        0 0 25px rgba(255, 215, 0, 0.8),
+        inset 0 2px 4px rgba(255,255,255,0.3);
+}
+
+@keyframes reelSpin {
+    0% { transform: rotateY(0deg) rotateX(0deg); }
+    25% { transform: rotateY(90deg) rotateX(10deg); }
+    50% { transform: rotateY(180deg) rotateX(0deg); }
+    75% { transform: rotateY(270deg) rotateX(-10deg); }
+    100% { transform: rotateY(360deg) rotateX(0deg); }
+}
+
+@keyframes reelGlow {
+    0%, 100% { box-shadow: 0 8px 16px rgba(0,0,0,0.3), 0 0 15px rgba(255, 107, 107, 0.5); }
+    50% { box-shadow: 0 8px 16px rgba(0,0,0,0.3), 0 0 25px rgba(255, 107, 107, 0.8); }
+}
+
+@keyframes reelBounce {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.15) rotateZ(-2deg); }
+    30% { transform: scale(1.05) rotateZ(1deg); }
+    45% { transform: scale(1.1) rotateZ(-0.5deg); }
+    60% { transform: scale(1.02) rotateZ(0.5deg); }
+    100% { transform: scale(1); }
+}
+
+@keyframes reelFlash {
+    0% { background: linear-gradient(145deg, #ffffff, #f0f0f0); }
+    50% { background: linear-gradient(145deg, #2ecc71, #27ae60); }
+    100% { background: linear-gradient(145deg, #ffffff, #f0f0f0); }
+}
+
+@keyframes reelWin {
+    0%, 100% { transform: scale(1) rotateZ(0deg); }
+    25% { transform: scale(1.1) rotateZ(2deg); }
+    75% { transform: scale(1.1) rotateZ(-2deg); }
+}
+
+@keyframes reelPulse {
+    0%, 100% { box-shadow: 0 8px 16px rgba(0,0,0,0.3), 0 0 15px rgba(255, 215, 0, 0.6); }
+    50% { box-shadow: 0 8px 16px rgba(0,0,0,0.3), 0 0 35px rgba(255, 215, 0, 1); }
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.game-info > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+#bet-amount {
+    width: 70px;
+    padding: 8px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+}
+
+#bet-amount:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.spin-button, .new-session-button {
+    width: 100%;
+    padding: 18px;
+    font-size: 1.6em;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.spin-button::before, .new-session-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.spin-button:hover::before, .new-session-button:hover::before {
+    left: 100%;
+}
+
+.spin-button {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24, #ff6b6b);
+    background-size: 200% 200%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: gradientShift 3s ease infinite;
+}
+
+.spin-button:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(238, 90, 36, 0.4);
+    animation-duration: 1s;
+}
+
+.spin-button:active:not(:disabled) {
+    transform: translateY(0px);
+}
+
+.spin-button:disabled {
+    background: linear-gradient(45deg, #666, #555);
+    cursor: not-allowed;
+    animation: none;
+}
+
+.new-session-button {
+    background: linear-gradient(45deg, #2ecc71, #27ae60, #2ecc71);
+    background-size: 200% 200%;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: gradientShift 3s ease infinite reverse;
+}
+
+.new-session-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(39, 174, 96, 0.4);
+    animation-duration: 1s;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.stats-panel {
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255,255,255,0.25);
+    min-width: 300px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.stats-panel h3 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: #ffd700;
+    font-size: 1.4em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 12px 10px;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.probability-section, .payout-table, .probability-theory {
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255,255,255,0.25);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    animation: fadeInUp 1s ease 0.6s both;
+}
+
+.probability-section h3, .payout-table h3, .probability-theory h3 {
+    color: #ffd700;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.probability-info {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.symbol-probs {
+    flex: 1;
+    min-width: 350px;
+}
+
+.symbol-probs h4 {
+    margin-bottom: 15px;
+    color: #e8e8e8;
+}
+
+.prob-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.prob-item:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateX(5px);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.prob-item span:first-child {
+    font-size: 1.3em;
+}
+
+.theoretical-rtp {
+    text-align: center;
+    font-size: 1.2em;
+    background: rgba(255,215,0,0.1);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,215,0,0.3);
+}
+
+.simulation-controls {
+    border-top: 2px solid rgba(255,255,255,0.2);
+    padding-top: 25px;
+}
+
+.simulation-controls h4 {
+    margin-bottom: 20px;
+    color: #ffd700;
+    font-size: 1.3em;
+}
+
+.sim-inputs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.simulation-controls input, .simulation-controls button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.simulation-controls input {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+    min-width: 200px;
+}
+
+.simulation-controls input:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.simulation-controls button {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 180px;
+}
+
+.simulation-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(52, 152, 219, 0.3);
+}
+
+.sim-description {
+    font-size: 0.95em;
+    opacity: 0.8;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.simulation-results {
+    margin-top: 20px;
+    padding: 25px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    display: none;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.simulation-results h4 {
+    margin-bottom: 20px;
+    color: #ffd700;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.payout-table {
+    animation: fadeInUp 1s ease 0.9s both;
+}
+
+.payout-description {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+    opacity: 0.9;
+    background: rgba(255,215,0,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,215,0,0.2);
+}
+
+.payout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.payout-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.payout-item:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.02);
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.payout-item span:first-child {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.payout-item span:last-child {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.probability-theory {
+    animation: fadeInUp 1s ease 1.2s both;
+}
+
+.theory-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.theory-section {
+    background: rgba(255,255,255,0.08);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.theory-section:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-3px);
+}
+
+.theory-section h4 {
+    margin-bottom: 15px;
+    color: #ffd700;
+    font-size: 1.2em;
+}
+
+.theory-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.theory-section li {
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.4;
+}
+
+.theory-section li::before {
+    content: '•';
+    color: #ffd700;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Win Animation Styles */
+.win-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+    background-size: 200% 200%;
+    color: #333;
+    padding: 40px 60px;
+    border-radius: 25px;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    z-index: 1000;
+    animation: winAnimation 3s ease, gradientShift 1s ease infinite;
+    box-shadow:
+        0 20px 40px rgba(255, 215, 0, 0.4),
+        0 0 60px rgba(255, 215, 0, 0.6),
+        inset 0 2px 4px rgba(255,255,255,0.3);
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+.win-message .win-amount {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.win-message .win-payout {
+    font-size: 1.5em;
+    color: #d35400;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+@keyframes winAnimation {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5) rotate(-10deg);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+    40% {
+        transform: translate(-50%, -50%) scale(0.95) rotate(-2deg);
+    }
+    60% {
+        transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
+    }
+    80% {
+        transform: translate(-50%, -50%) scale(0.98) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Confetti Animation */
+.confetti {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    animation: confettiFall 4s linear infinite;
+    z-index: 999;
+    border-radius: 50%;
+}
+
+@keyframes confettiFall {
+    0% {
+        top: -20px;
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        top: 100vh;
+        transform: rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Message Notifications */
+.message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 18px 30px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    z-index: 1000;
+    animation: messageSlide 0.5s ease;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.message.success {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+}
+.message.error {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+}
+.message.info {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+}
+
+@keyframes messageSlide {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Loading and Results Styles */
+.loading {
+    text-align: center;
+    font-style: italic;
+    opacity: 0.7;
+    animation: pulse 1.5s ease infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.sim-stat {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.sim-stat:hover {
+    background: rgba(255,255,255,0.05);
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+
+.sim-stat:last-child {
+    border-bottom: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 2.5em;
+    }
+
+    .game-area {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .slot-machine, .stats-panel {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .reels {
+        gap: 10px;
+    }
+
+    .reel {
+        width: 70px;
+        height: 70px;
+        font-size: 2.5em;
+    }
+
+    .probability-info {
+        flex-direction: column;
+    }
+
+    .theory-content {
+        grid-template-columns: 1fr;
+    }
+
+    .payout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sim-inputs {
+        flex-direction: column;
+    }
+
+    .sim-inputs input, .sim-inputs button {
+        width: 100%;
+    }
+}
