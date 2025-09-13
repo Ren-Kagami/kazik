@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - Игровые Автоматы</title>
+    <link rel="stylesheet" href="/static/admin-style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Загрузка админ-панели...</p>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-section" class="login-container" style="display: none;">
+        <div class="login-card">
+            <h1>🔒 Вход в Админ-панель</h1>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">Имя пользователя:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" id="login-btn" class="login-button">
+                    <span class="button-text">Войти</span>
+                    <span class="button-spinner" style="display: none;">⏳</span>
+                </button>
+            </form>
+            <div id="login-error" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="dashboard" class="dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1>🎰 Админ-панель Игровых Автоматов</h1>
+            <div class="admin-info">
+                <span id="admin-username">admin</span>
+                <button id="logout-btn" class="logout-button">Выйти</button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="dashboard-nav">
+            <button class="nav-btn active" data-section="overview">📊 Обзор</button>
+            <button class="nav-btn" data-section="probability">🎲 Вероятности</button>
+            <button class="nav-btn" data-section="sessions">👥 Сессии</button>
+            <button class="nav-btn" data-section="analytics">📈 Аналитика</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Overview Section -->
+            <section id="overview-section" class="content-section active">
+                <h2>Системный обзор</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <h3>Активные сессии</h3>
+                            <div class="stat-value" id="active-sessions">-</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🎰</div>
+                        <div class="stat-content">
+                            <h3>Всего вращений</h3>
+                            <div class="stat-value" id="total-spins">-</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>Общие выигрыши</h3>
+                            <div class="stat-value" id="total-winnings">-</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <h3>House Edge</h3>
+                            <div class="stat-value" id="house-edge">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overview-charts">
+                    <div class="chart-container">
+                        <h3>Активность сессий (24ч)</h3>
+                        <canvas id="sessions-chart" width="400" height="200"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Распределение выигрышей</h3>
+                        <canvas id="winnings-chart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Probability Section -->
+            <section id="probability-section" class="content-section">
+                <h2>Управление вероятностями</h2>
+
+                <div class="probability-controls">
+                    <div class="current-settings">
+                        <h3>Текущие настройки</h3>
+                        <div id="current-probability-display">
+                            <!-- Current probability settings will be loaded here -->
+                        </div>
+                        <div class="theoretical-rtp">
+                            <strong>Теоретический RTP: <span id="current-rtp">0.00%</span></strong>
+                        </div>
+                    </div>
+
+                    <div class="probability-editor">
+                        <h3>Редактор вероятностей</h3>
+                        <form id="probability-form">
+                            <div class="symbols-grid" id="symbols-grid">
+                                <!-- Symbol controls will be generated here -->
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="reset-probability-btn" class="secondary-button">
+                                    Сброс к умолчаниям
+                                </button>
+                                <button type="button" id="preview-changes-btn" class="secondary-button">
+                                    Предварительный просмотр
+                                </button>
+                                <button type="submit" class="primary-button">
+                                    Применить изменения
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="probability-preview" class="preview-section" style="display: none;">
+                            <h4>Предварительный просмотр</h4>
+                            <div class="preview-content">
+                                <div class="preview-rtp">
+                                    <strong>Новый RTP: <span id="preview-rtp">0.00%</span></strong>
+                                    <span class="rtp-diff" id="rtp-difference"></span>
+                                </div>
+                                <div class="preview-probabilities" id="preview-probabilities">
+                                    <!-- Preview probabilities will be shown here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="probability-testing">
+                    <h3>Тестирование конфигурации</h3>
+                    <div class="testing-controls">
+                        <input type="number" id="test-simulations" value="10000" min="1000" max="100000" placeholder="Количество симуляций">
+                        <button id="run-test-btn" class="secondary-button">Запустить тест</button>
+                    </div>
+                    <div id="test-results" class="test-results" style="display: none;"></div>
+                </div>
+            </section>
+
+            <!-- Sessions Section -->
+            <section id="sessions-section" class="content-section">
+                <h2>Управление сессиями</h2>
+
+                <div class="sessions-controls">
+                    <div class="filters">
+                        <select id="session-filter">
+                            <option value="all">Все сессии</option>
+                            <option value="active">Активные</option>
+                            <option value="inactive">Неактивные</option>
+                            <option value="recent">Последние 24ч</option>
+                        </select>
+
+                        <input type="text" id="session-search" placeholder="Поиск по ID сессии...">
+
+                        <button id="refresh-sessions-btn" class="secondary-button">Обновить</button>
+                    </div>
+                </div>
+
+                <div class="sessions-table-container">
+                    <table id="sessions-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Сессии</th>
+                                <th>Создана</th>
+                                <th>Последняя активность</th>
+                                <th>Кредиты</th>
+                                <th>Вращений</th>
+                                <th>Выигрыши</th>
+                                <th>RTP</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessions-table-body">
+                            <!-- Sessions data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="sessions-pagination">
+                    <!-- Pagination controls will be generated here -->
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section">
+                <h2>Детальная аналитика</h2>
+
+                <div class="analytics-controls">
+                    <div class="time-range">
+                        <label for="analytics-period">Период:</label>
+                        <select id="analytics-period">
+                            <option value="1">Последний час</option>
+                            <option value="6">Последние 6 часов</option>
+                            <option value="24" selected>Последние 24 часа</option>
+                            <option value="168">Последняя неделя</option>
+                        </select>
+                    </div>
+
+                    <button id="export-analytics-btn" class="secondary-button">
+                        📊 Экспорт данных
+                    </button>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Статистика игры</h3>
+                        <div id="game-statistics">
+                            <!-- Game statistics will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Распределение выигрышей</h3>
+                        <canvas id="win-distribution-chart" width="400" height="300"></canvas>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>RTP по времени</h3>
+                        <canvas id="rtp-timeline-chart" width="400" height="300"></canvas>
+                    </div>
+
+                    <div class="analytics-card">
+                        <h3>Активность пользователей</h3>
+                        <canvas id="user-activity-chart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="detailed-reports">
+                    <h3>Детальные отчеты</h3>
+                    <div class="reports-grid">
+                        <div class="report-item">
+                            <h4>Отчет по символам</h4>
+                            <p>Анализ частоты появления символов</p>
+                            <button class="report-btn" data-report="symbols">Создать отчет</button>
+                        </div>
+
+                        <div class="report-item">
+                            <h4>Финансовый отчет</h4>
+                            <p>Анализ доходности и выплат</p>
+                            <button class="report-btn" data-report="financial">Создать отчет</button>
+                        </div>
+
+                        <div class="report-item">
+                            <h4>Пользовательский отчет</h4>
+                            <p>Статистика поведения игроков</p>
+                            <button class="report-btn" data-report="users">Создать отчет</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for confirmations -->
+    <div id="modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Подтверждение</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Вы уверены?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel" class="secondary-button">Отмена</button>
+                <button id="modal-confirm" class="primary-button">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification container -->
+    <div id="notification-container"></div>
+
+    <script src="/static/admin-script.js"></script>
+</body>
+</html>
